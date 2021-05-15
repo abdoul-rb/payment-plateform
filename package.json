@@ -1,11 +1,17 @@
 {
    "name": "payment-platform",
-   "description": "## NodeJS & MongoDB",
+   "description": "Plateforme de paiement en ligne",
    "version": "1.0.0",
    "main": "server.js",
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1"
    },
    "author": "",
-   "license": "UNLICENSED"
+   "license": "UNLICENSED",
+   "private": true,
+   "dependencies": {
+      "mongoose": "^5.12.8",
+      "pg": "^8.6.0",
+      "sequelize": "^6.6.2"
+   }
 }
