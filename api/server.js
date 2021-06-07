@@ -1,12 +1,17 @@
 const express = require('express');
 const app = express();
-const path = require('path');
+
+// Declare route files
+const routeFiles = [
+    require("./routes/main"),
+];
 
 // Set environment variables
 const PORT = process.env['WEB_PORT'] || 3000;
 
-// Include routes
-const routes = require("./routes/main");
-app.use(routes);
+// Include route files
+routeFiles.forEach(routes => {
+    app.use(routes);
+});
 
 app.listen(PORT, () => console.log("Server listening"));
