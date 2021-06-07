@@ -9,12 +9,12 @@ services:
          MONGO_INITDB_ROOT_USERNAME: root
          MONGO_INITDB_ROOT_PASSWORD: password
 
-   server:
+   api:
       image: node:alpine3.10
       ports:
-         - 3000:3000
+         - ${API_PORT}:${API_PORT}
       environment:
-         PORT: 3000
+         PORT: ${API_PORT}
          MONGO_URL: "mongodb://root:password@mongo/app"
          DATABASE_URL: "postgres://root:password@db/app"
       volumes:
