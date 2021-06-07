@@ -6,7 +6,7 @@ const path = require('path');
 const PORT = process.env['WEB_PORT'] || 3000;
 
 // Include routes
-const routes = require("./routes");
+const routes = require("./routes/main");
 app.use(routes);
 
 app.listen(PORT, () => console.log("Server listening"));
