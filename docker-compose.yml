@@ -18,9 +18,9 @@ services:
          MONGO_URL: "mongodb://root:password@mongo/app"
          DATABASE_URL: "postgres://root:password@db/app"
       volumes:
-         - ./:/home/node/app
-      working_dir: /home/node/app
-      command: sh -c "npm install --no-update-notifier; npm start --no-update-notifier"
+         - ./api:/home/node/api
+      working_dir: /home/node/api
+      command: sh -c "npm install --no-update-notifier; npm start api --no-update-notifier"
 
    db:
       image: postgres:alpine
