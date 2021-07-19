@@ -1,8 +1,8 @@
 const express = require('express');
-var router = express.Router()
+var app = express.Router()
 
-router.get('/codes', (request, response) => {
+app.get('/codes', (req, res) => {
     console.log('Codes HTTP');
  });
  
-module.exports = router;
+module.exports = app;
