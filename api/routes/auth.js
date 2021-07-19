@@ -49,10 +49,10 @@ app.post("/register",
         let uploadPath;
 
         if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send('Aucun fichier n\'a été uploadé. Le KBIS est manquant');
+            return res.status(400).json({message: "Aucun fichier n'a été uploadé. Le KBIS est manquant"});
         }
         if (!req.files.hasOwnProperty("KBIS")) {
-            return res.status(400).send("Le fichier KBIS est manquant");
+            return res.status(400).json({message: "Le fichier KBIS est manquant"});
         }
 
         // On est assuré qu'il y a un fichier KBIS
