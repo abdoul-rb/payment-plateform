@@ -11,9 +11,13 @@ User.init(
          primaryKey: true,
          autoIncrement: true
       },
-      firstname: DataTypes.STRING,
-      lastname: DataTypes.STRING,
-      emai: {
+      name: DataTypes.STRING,
+      company: DataTypes.STRING,
+      phone_number: {
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      email: {
          type: DataTypes.STRING,
          validate: {
             isEmail: true
@@ -26,17 +30,22 @@ User.init(
          allowNull: false,
          defaultValue: false
       },
-      confirmed: {
+      kbis: DataTypes.STRING,
+      url_confirmation: DataTypes.STRING,
+      url_cancellation: DataTypes.STRING,
+      currency: DataTypes.STRING,
+      roles: DataTypes.STRING,
+      isValidated: {
          type: DataTypes.BOOLEAN,
          allowNull: false,
          defaultValue: false,
       },
-      createdAt: {
+      created_at: {
          type: DataTypes.DATE,
          defaultValue: DataTypes.NOW,
          field: 'created_at'
       },
-      updatedAt: {
+      updated_at: {
          type: DataTypes.DATE,
          defaultValue: DataTypes.NOW,
          field: 'updated_at'

@@ -3,7 +3,7 @@ let app = express.Router();
 const { body, validationResult } = require('express-validator');
 const passwordMinLenght = 8;
 
-app.post("/register",
+app.post("/register/supplier",
     body('email')
         .notEmpty().withMessage("Votre email ne peut pas être vide")
         .normalizeEmail().isEmail().withMessage(`Votre email doit avoir le bon format`),
@@ -20,7 +20,7 @@ app.post("/register",
         .isString().withMessage(`Le nom de votre société doit être du texte`)
         .not().isEmpty().withMessage(`Le nom de votre société ne peut être vide`)
         .trim(),
-    body('contactData')
+    body('phone_number')
         .optional()
         .isString().withMessage("Les informations de contact doivent être du texte")
         .trim(),
@@ -38,7 +38,7 @@ app.post("/register",
         // Enregistrer l'utilisateur en base de données
         const bodyData = req.body;
 
-        if (body('contactData').exists()) {
+        if (body('phone_number').exists()) {
             // Les informations de contact sont bien présent
         } else {
             // Les informations de contact sont vide
@@ -66,10 +66,6 @@ app.post("/register",
             }
             // Fichier uploadé sur la machine !
         });
-
-        // Générer le token de connexion
-
-        // Enregistrer le token en session
 
         // Renvoyer un message de succès
 
