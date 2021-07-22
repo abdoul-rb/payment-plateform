@@ -12,9 +12,9 @@ services:
    api:
       image: node:alpine3.10
       ports:
-         - ${API_PORT}:${API_PORT}
+         - 3001:3000
       environment:
-         PORT: ${API_PORT}
+         PORT: 3001
          MONGO_URL: "mongodb://root:password@mongo/app"
          DATABASE_URL: "postgres://root:password@db/app"
       volumes:
@@ -29,7 +29,7 @@ services:
          POSTGRES_USER: root
          POSTGRES_PASSWORD: password
       ports:
-      - 5432:5432
+         - 5432:5432
       volumes:
          - db-data:/var/lib/postgresql/data:rw
 
