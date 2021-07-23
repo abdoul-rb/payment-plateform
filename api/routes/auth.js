@@ -1,20 +1,13 @@
-const express = require('express');
-let app = express.Router();
 const { body, validationResult } = require('express-validator');
+const User = require("../models/sequelize/User");
+const { Router } = require("express");
+const app = Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 const passwordMinLenght = 8;
 
 app.post("/register/supplier",
-    body('email')
-        .notEmpty().withMessage("Votre email ne peut pas être vide")
-        .normalizeEmail().isEmail().withMessage(`Votre email doit avoir le bon format`),
-    body('name')
-        .notEmpty().withMessage("Votre nom ne peut pas être vide")
-        .isString().withMessage(`Votre nom doit être du texte`)
-        .normalizeEmail(),
-    body('password')
-        .notEmpty().withMessage("Votre mot de passe ne peut pas être vide")
-        .isString().withMessage(`Le mot de passe doit être du texte`)
-        .isLength({ min: passwordMinLenght }).withMessage(`La taille du mot de passe doit être minimum ${passwordMinLenght} caractères`),
     body('company')
         .notEmpty().withMessage("Votre nom de société ne peut pas être vide")
         .isString().withMessage(`Le nom de votre société doit être du texte`)
@@ -24,6 +17,13 @@ app.post("/register/supplier",
         .optional()
         .isString().withMessage("Les informations de contact doivent être du texte")
         .trim(),
+    body('email')
+        .notEmpty().withMessage("Votre email ne peut pas être vide")
+        .normalizeEmail().isEmail().withMessage(`Votre email doit avoir le bon format`),
+    body('password')
+        .notEmpty().withMessage("Votre mot de passe ne peut pas être vide")
+        .isString().withMessage(`Le mot de passe doit être du texte`)
+        .isLength({ min: passwordMinLenght }).withMessage(`La taille du mot de passe doit être minimum ${passwordMinLenght} caractères`),
     body('currency')
         .notEmpty().withMessage("La devise ne peut pas être vide")
         .isString().withMessage(`La devise doit être du texte`)
@@ -35,7 +35,19 @@ app.post("/register/supplier",
             return res.status(400).json({ errors: errors.array() });
         }
 
-        // Enregistrer l'utilisateur en base de données
+        const { name, company, phone_number, email, password, currency } = req.body;
+
+        User.create({ name, company, phone_number, email, password, currency, roles: 'SUPPLIER' })
+            .then((data) => res.status(201).json(data))
+            .catch((e) => {
+                const errObj = {};
+                e.errors.map( er => {
+                    errObj[er.path] = er.message;
+                })
+                return res.status(400).json({ 'errors': errObj })
+            });
+
+        /* 
         const bodyData = req.body;
 
         if (body('phone_number').exists()) {
@@ -72,6 +84,7 @@ app.post("/register/supplier",
         res.status(200).json({
             "Message": "Inscription traitée"
         });
+        */
     });
 
 app.post("/login",
@@ -89,7 +102,28 @@ app.post("/login",
         }
 
         // Tester que l'utilisateur existe
-        const bodyData = req.body;
+        const { email, password } = req.body;
+
+        User.findOne({
+            where: { email: email }
+        })
+        .then((user) => {
+            if(user) {
+                bcrypt.compare(password, user.password, function(errBcrypt, resBcrypt) {
+                    if(resBcrypt) {
+                        return res.status(200).json({
+                            'userId': '',
+                            'token': 'Token'
+                        });
+                    } else {
+                        return res.status(403).json({ 'error': 'Mot de passe incorrect' })
+                    }
+                })
+            }
+        })
+
+        const emailExist = User.findOne({ email: email });
+        if (!emailExist) throw 'L\'adresse email entrée n\'existe pas.'
 
         // Générer le token de connexion
 

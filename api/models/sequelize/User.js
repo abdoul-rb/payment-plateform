@@ -11,8 +11,24 @@ User.init(
          primaryKey: true,
          autoIncrement: true
       },
-      name: DataTypes.STRING,
-      company: DataTypes.STRING,
+      name: {
+         type: DataTypes.STRING,
+         allowNull: false,
+         validate: {
+            notNull: {
+               msg: 'Votre nom est obligatoire.'
+            }
+         }
+      },
+      company: {
+         type: DataTypes.STRING,
+         allowNull: false,
+         validate: {
+            notNull: {
+               msg: 'Précisez le nom de votre société.'
+            }
+         }
+      },
       phone_number: {
          type: DataTypes.STRING,
          allowNull: true,
@@ -20,10 +36,14 @@ User.init(
       email: {
          type: DataTypes.STRING,
          validate: {
-            isEmail: true
+            isEmail: true,
          },
          allowNull: false,
-         unique: true
+         lowercase: true,
+         unique: {
+            args: true,
+            msg: 'Cette adresse email est déjà utilisée'
+         }
       },
       password: {
          type: DataTypes.STRING,
@@ -31,14 +51,23 @@ User.init(
          defaultValue: false
       },
       kbis: DataTypes.STRING,
-      url_confirmation: DataTypes.STRING,
-      url_cancellation: DataTypes.STRING,
-      currency: DataTypes.STRING,
-      roles: DataTypes.STRING,
+      url_confirmation: { 
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      url_cancellation: {
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      currency: {
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      roles: DataTypes.ENUM('ADMIN', 'SUPPLIER'),
       isValidated: {
          type: DataTypes.BOOLEAN,
          allowNull: false,
-         defaultValue: false,
+         defaultValue: true,
       },
       created_at: {
          type: DataTypes.DATE,
@@ -56,6 +85,11 @@ User.init(
       modelName: 'User'
    }
 );
+
+User.sync({
+   // alter: true
+   // force: true,
+});
 
 const encodePassword = async (user) => {
    user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
