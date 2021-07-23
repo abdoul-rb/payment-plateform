@@ -1,5 +1,5 @@
 const express = require('express');
-let fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 const app = express();
 
 // Declare route files
@@ -9,14 +9,15 @@ const AuthRoutes = require("./routes/auth");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-// Set environment variables
-const PORT = process.env['API_PORT'] || 3000;
-
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(fileUpload());
+
+app.get('/test', (req, res) => {
+   console.log('Test')
+   res.send("Hello world")
+})
 
 // Include route files
 app.use("/", RoutesMain);
