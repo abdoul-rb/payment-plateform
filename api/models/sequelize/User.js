@@ -36,7 +36,10 @@ User.init(
       email: {
          type: DataTypes.STRING,
          validate: {
-            isEmail: true,
+            isEmail: {
+               args: true,
+               msg: 'Adresse email invalide'
+            },
          },
          allowNull: false,
          lowercase: true,
@@ -48,7 +51,12 @@ User.init(
       password: {
          type: DataTypes.STRING,
          allowNull: false,
-         defaultValue: false
+         validate: {
+            min: {
+               args: 8,
+               msg: 'Le mot de passe doit faire au moins 8 caractères'
+            }
+         }
       },
       kbis: DataTypes.STRING,
       url_confirmation: { 
@@ -61,7 +69,13 @@ User.init(
       },
       currency: {
          type: DataTypes.STRING,
-         allowNull: true,
+         allowNull: false,
+         validate: {
+            is: {
+               args: /^[$€]{1}$/,
+               msg: 'Vous devez saisir une devise valide ($, €)'
+            }
+         }
       },
       roles: DataTypes.ENUM('ADMIN', 'SUPPLIER'),
       isValidated: {

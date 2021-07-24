@@ -1,59 +1,30 @@
 const { body, validationResult } = require('express-validator');
 const User = require("../models/sequelize/User");
 const { Router } = require("express");
-const app = Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("../lib/jwt");
+const app = Router();
 
-const passwordMinLength = 8;
+app.post("/register/supplier", (req, res) => {
+    const { name, company, phone_number, email, password, currency } = req.body;
 
-app.post("/register/supplier",
-    body('email')
-        .notEmpty().withMessage("Votre email ne peut pas être vide")
-        .normalizeEmail().isEmail().withMessage(`Votre email doit avoir le bon format`),
-    body('password')
-        .notEmpty().withMessage("Votre mot de passe ne peut pas être vide")
-        .isString().withMessage(`Le mot de passe doit être du texte`)
-        .isLength({ min: passwordMinLength }).withMessage(`La taille du mot de passe doit être minimum ${passwordMinLength} caractères`),
-    body('currency')
-        .notEmpty().withMessage("La devise ne peut pas être vide")
-        .isString().withMessage(`La devise doit être du texte`)
-        .matches(/^[$€]{1}$/).withMessage(`Vous devez saisir une devise valide ($, €)`)
-        .trim(),
-    (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        const { name, company, phone_number, email, password, currency } = req.body;
-
-        User.create({ 
-            name: name.trim(), 
-            company: company.trim(),
-            phone_number: phone_number.trim(),
-            email: email,
-            password: password,
-            currency: currency,
-            roles: 'SUPPLIER' 
-        })
-        .then((data) => res.status(201).json(data))
-        .catch((e) => {
-            const errors = {};
-            e.errors.map( err => {
-                errors[err.path] = err.message;
-            })
-            return res.status(400).json({ 'errors': errors })
-        });
+    User.create({ 
+        name: name.trim(), 
+        company: company.trim(),
+        phone_number: phone_number.trim(),
+        email: email,
+        password: password,
+        currency: currency.trim(),
+        roles: 'SUPPLIER' 
+    })
+    .then((data) => res.status(201).json(data))
+    .catch((e) => {
+        const errors = {};
+        e.errors.map((err) => { errors[err.path] = err.message; })
+        return res.status(400).json({ 'errors': errors })
+    });
 
         /* 
-        const bodyData = req.body;
-
-        if (body('phone_number').exists()) {
-            // Les informations de contact sont bien présent
-        } else {
-            // Les informations de contact sont vide
-        }
 
         // Enregistrement du kbis en local
         let kbis;
@@ -110,7 +81,7 @@ app.post("/login",
                 bcrypt.compare(password, user.password, function(errBcrypt, resBcrypt) {
                     if(resBcrypt) {
                         return res.status(200).json({
-                            'user': user,
+                            'userId': user.id,
                             'token': jwt.generatedUserToken(user)
                             // Enregistrer le token en session
                         });
