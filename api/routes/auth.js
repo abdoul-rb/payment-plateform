@@ -3,27 +3,18 @@ const User = require("../models/sequelize/User");
 const { Router } = require("express");
 const app = Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jwt = require("../lib/jwt");
 
-const passwordMinLenght = 8;
+const passwordMinLength = 8;
 
 app.post("/register/supplier",
-    body('company')
-        .notEmpty().withMessage("Votre nom de société ne peut pas être vide")
-        .isString().withMessage(`Le nom de votre société doit être du texte`)
-        .not().isEmpty().withMessage(`Le nom de votre société ne peut être vide`)
-        .trim(),
-    body('phone_number')
-        .optional()
-        .isString().withMessage("Les informations de contact doivent être du texte")
-        .trim(),
     body('email')
         .notEmpty().withMessage("Votre email ne peut pas être vide")
         .normalizeEmail().isEmail().withMessage(`Votre email doit avoir le bon format`),
     body('password')
         .notEmpty().withMessage("Votre mot de passe ne peut pas être vide")
         .isString().withMessage(`Le mot de passe doit être du texte`)
-        .isLength({ min: passwordMinLenght }).withMessage(`La taille du mot de passe doit être minimum ${passwordMinLenght} caractères`),
+        .isLength({ min: passwordMinLength }).withMessage(`La taille du mot de passe doit être minimum ${passwordMinLength} caractères`),
     body('currency')
         .notEmpty().withMessage("La devise ne peut pas être vide")
         .isString().withMessage(`La devise doit être du texte`)
@@ -37,15 +28,23 @@ app.post("/register/supplier",
 
         const { name, company, phone_number, email, password, currency } = req.body;
 
-        User.create({ name, company, phone_number, email, password, currency, roles: 'SUPPLIER' })
-            .then((data) => res.status(201).json(data))
-            .catch((e) => {
-                const errObj = {};
-                e.errors.map( er => {
-                    errObj[er.path] = er.message;
-                })
-                return res.status(400).json({ 'errors': errObj })
-            });
+        User.create({ 
+            name: name.trim(), 
+            company: company.trim(),
+            phone_number: phone_number.trim(),
+            email: email,
+            password: password,
+            currency: currency,
+            roles: 'SUPPLIER' 
+        })
+        .then((data) => res.status(201).json(data))
+        .catch((e) => {
+            const errors = {};
+            e.errors.map( err => {
+                errors[err.path] = err.message;
+            })
+            return res.status(400).json({ 'errors': errors })
+        });
 
         /* 
         const bodyData = req.body;
@@ -101,7 +100,6 @@ app.post("/login",
             return res.status(400).json({ errors: errors.array() });
         }
 
-        // Tester que l'utilisateur existe
         const { email, password } = req.body;
 
         User.findOne({
@@ -112,27 +110,20 @@ app.post("/login",
                 bcrypt.compare(password, user.password, function(errBcrypt, resBcrypt) {
                     if(resBcrypt) {
                         return res.status(200).json({
-                            'userId': '',
-                            'token': 'Token'
+                            'user': user,
+                            'token': jwt.generatedUserToken(user)
+                            // Enregistrer le token en session
                         });
                     } else {
-                        return res.status(403).json({ 'error': 'Mot de passe incorrect' })
+                        return res.status(403).json({ 'error': 'Mot de passe incorrect' });
                     }
                 })
+            } else {
+                return res.status(404).json({ 'error': 'Aucun utilisateur avec cette adresse email' });
             }
         })
-
-        const emailExist = User.findOne({ email: email });
-        if (!emailExist) throw 'L\'adresse email entrée n\'existe pas.'
-
-        // Générer le token de connexion
-
-        // Enregistrer le token en session
-
-        // Renvoyer un message de succès
-
-        res.json({
-            "Message": "yes"
+        .catch((e) => {
+            return res.status(500).json({ 'error': 'Impossible de vérifier l\'utilisateur' })
         });
     });
 

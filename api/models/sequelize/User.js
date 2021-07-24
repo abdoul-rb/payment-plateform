@@ -69,6 +69,14 @@ User.init(
          allowNull: false,
          defaultValue: true,
       },
+      client_token: { 
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
+      client_secret: { 
+         type: DataTypes.STRING,
+         allowNull: true,
+      },
       created_at: {
          type: DataTypes.DATE,
          defaultValue: DataTypes.NOW,
