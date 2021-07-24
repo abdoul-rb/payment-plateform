@@ -8,7 +8,6 @@ services:
       environment:
          MONGO_INITDB_ROOT_USERNAME: root
          MONGO_INITDB_ROOT_PASSWORD: password
-
    api:
       image: node:alpine3.10
       ports:
@@ -21,7 +20,6 @@ services:
          - ./api:/home/node/api
       working_dir: /home/node/api
       command: sh -c "npm install --no-update-notifier; npm start api --no-update-notifier"
-
    db:
       image: postgres:alpine
       environment:
@@ -32,6 +30,9 @@ services:
          - 5432:5432
       volumes:
          - db-data:/var/lib/postgresql/data:rw
-
+   adminer:
+      image: 'adminer:4.7'
+      ports:
+            - '8081:8080'
 volumes:
    db-data: {}
