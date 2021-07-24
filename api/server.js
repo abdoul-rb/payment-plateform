@@ -1,6 +1,7 @@
 const express = require('express');
 let fileUpload = require('express-fileupload');
 const app = express();
+var cors = require('cors');
 
 // Declare route files
 const RoutesMain = require("./routes/main");
@@ -8,7 +9,7 @@ const AuthRoutes = require("./routes/auth");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+// app.use(cors());
 
 // Set environment variables
 const PORT = process.env['API_PORT'] || 3000;
