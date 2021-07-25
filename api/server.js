@@ -6,10 +6,7 @@ var cors = require('cors');
 // Declare route files
 const RoutesMain = require("./routes/main");
 const AuthRoutes = require("./routes/auth");
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// app.use(cors());
+const TransactionRoutes = require("./routes/transaction");
 
 // Set environment variables
 const PORT = process.env['API_PORT'] || 3000;
@@ -18,9 +15,11 @@ const PORT = process.env['API_PORT'] || 3000;
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(fileUpload());
+// app.use(cors());
 
 // Include route files
 app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);
+app.use("/transaction", TransactionRoutes);
 
 app.listen(PORT, () => console.log(`Server listening ...`));
