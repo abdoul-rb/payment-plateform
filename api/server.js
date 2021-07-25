@@ -14,11 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(fileUpload());
 
-app.get('/test', (req, res) => {
-   console.log('Test')
-   res.send("Hello world")
-})
-
 // Include route files
 app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);

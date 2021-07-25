@@ -1,0 +1,14 @@
+
+POST http://localhost:3001/auth/register/supplier
+Content-Type: application/json
+
+{
+   "Name": "Mark Zuck",
+   "company": "Facebook",
+   "phone_number": "+41 999 234 876",
+   "email": "mark@facebook.com",
+   "password": "password"
+}
+
+### 
+GET http://localhost:3001/test

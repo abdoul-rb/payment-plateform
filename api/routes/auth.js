@@ -1,21 +1,37 @@
 const { body, validationResult } = require('express-validator');
 const User = require("../models/sequelize/User");
+const fileUpload = require('express-fileupload');
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("../lib/jwt");
 const app = Router();
 
 app.post("/register/supplier", (req, res) => {
-    const { name, company, phone_number, email, password, currency } = req.body;
+    const { name, company, phone_number, email, password, kbis, currency } = req.body;
+
+    console.log('### ', req.files);
+    if(req.files) {
+        var file = req.files.kbis;
+        var path = '../files/kbis/' + file.name;
+
+        file.mv(path, (e) => {
+            if (e) {
+                return res.status(500).send(e);
+            } else {
+                res.send('Kbis ajouté');
+            }
+        });
+    }
 
     User.create({ 
-        name: name.trim(), 
-        company: company.trim(),
-        phone_number: phone_number.trim(),
+        name: name, 
+        company: company,
+        phone_number: phone_number,
         email: email,
         password: password,
-        currency: currency.trim(),
-        roles: 'SUPPLIER' 
+        kbis: path,
+        currency: currency,
+        roles: 'SUPPLIER'
     })
     .then((data) => res.status(201).json(data))
     .catch((e) => {
@@ -25,11 +41,6 @@ app.post("/register/supplier", (req, res) => {
     });
 
         /* 
-
-        // Enregistrement du kbis en local
-        let kbis;
-        let uploadPath;
-
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({message: "Aucun fichier n'a été uploadé. Le KBIS est manquant"});
         }
@@ -37,22 +48,12 @@ app.post("/register/supplier", (req, res) => {
             return res.status(400).json({message: "Le fichier KBIS est manquant"});
         }
 
-        // On est assuré qu'il y a un fichier KBIS
-        kbis = req.files.KBIS;
-        uploadPath = __dirname + '/' + kbis.name;
-
         // La méthode mv permet de déplacer le fichier temporairement enregistré sur la machine
         kbis.mv(uploadPath, function (err) {
             if (err) {
                 return res.status(500).send(err);
             }
             // Fichier uploadé sur la machine !
-        });
-
-        // Renvoyer un message de succès
-
-        res.status(200).json({
-            "Message": "Inscription traitée"
         });
         */
     });
