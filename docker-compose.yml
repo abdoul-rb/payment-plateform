@@ -13,7 +13,7 @@ services:
       ports:
          - ${API_PORT}:3000
       environment:
-         PORT: 3000
+         PORT: ${API_PORT}
          MONGO_URL: "mongodb://root:password@mongo/app"
          DATABASE_URL: "postgres://root:password@db/app"
       volumes:
