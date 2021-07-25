@@ -23,4 +23,4 @@ app.use(fileUpload());
 app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);
 
-app.listen(process.env.PORT || 3000, () => console.log(`Server listening ...`));
+app.listen(PORT, () => console.log(`Server listening ...`));
