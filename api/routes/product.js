@@ -24,7 +24,7 @@ app.post("/", // Create a ressource
     body('name')
         .isString().withMessage('Need the client who put the Product name'),
     body('price')
-        .isInt().withMessage('The product must have a valid price'),
+        .isFloat().withMessage('The product must have a valid price'),
     (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
