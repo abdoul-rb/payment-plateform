@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 const { Schema } = mongoose;
+const conn = require('../../lib/mongo');
 
 const CartsSchema = new Schema({
     client_id: Number,
@@ -9,6 +9,6 @@ const CartsSchema = new Schema({
     }]
 });
 
-const Carts = mongoose.model('Carts', CartsSchema);
+const Carts = conn.model('Carts', CartsSchema);
 
 export default Carts;
