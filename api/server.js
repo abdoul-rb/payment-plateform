@@ -20,6 +20,6 @@ app.use(fileUpload());
 // Include route files
 app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);
-app.use("/transaction", TransactionRoutes);
+app.use("/transactions", TransactionRoutes);
 
 app.listen(PORT, () => console.log(`Server listening ...`));
