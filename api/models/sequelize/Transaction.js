@@ -1,9 +1,15 @@
 const { Model, DataTypes } = require('sequelize');
+const connection = require('../../lib/sequelize');
 const Product = require('./Product');
 const User = require('./User');
-const connection = require('../../lib/sequelize');
 
-class Transaction extends Model { };
+class Transaction extends Model {
+  static associate(models) {
+    this.myAssociation = this
+      .hasOne(models.User)
+      .hasMany(models.Product);
+  }
+};
 
 Transaction.init(
   {
@@ -28,6 +34,4 @@ Transaction.init(
   }
 );
 
-Transaction.hasMany(Product);
-Transaction.hasOne(User);
 module.exports = Transaction;

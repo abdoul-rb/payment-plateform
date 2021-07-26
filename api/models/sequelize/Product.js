@@ -2,7 +2,12 @@ const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
 const Transaction = require('./Transaction');
 
-class Product extends Model { };
+class Product extends Model {
+    static associate(models) {
+        this.myAssociation = this
+            .belongsTo(models.Transaction);
+    }
+};
 
 Product.init(
     {
@@ -27,5 +32,4 @@ Product.init(
     }
 );
 
-Product.belongsTo(Transaction);
 module.exports = Product;

@@ -3,7 +3,12 @@ const connection = require('../../lib/sequelize');
 const bcrypt = require("bcryptjs");
 const Transaction = require('./Transaction');
 
-class User extends Model {}
+class User extends Model {
+   static associate(models) {
+      this.myAssociation = this
+        .belongsTo(models.Transaction);
+    }
+}
 
 User.init(
    {
@@ -110,5 +115,4 @@ const encodePassword = async (user) => {
 User.addHook("beforeCreate", encodePassword);
 User.addHook("beforeUpdate", encodePassword);
 
-User.belongsTo(Transaction);
 module.exports = User;
