@@ -8,9 +8,6 @@ const RoutesMain = require("./routes/main");
 const AuthRoutes = require("./routes/auth");
 const TransactionRoutes = require("./routes/transaction");
 
-// Set environment variables
-const PORT = process.env['API_PORT'] || 3000;
-
 // Parse body
 app.use(express.json());
 app.use(express.urlencoded());
@@ -22,4 +19,5 @@ app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);
 app.use("/transaction", TransactionRoutes);
 
-app.listen(PORT, () => console.log(`Server listening ...`));
+const PORT = process.env['API_PORT'] || 3000;
+app.listen(process.env.PORT || 3000, () => console.log(`Server listening ...`));
