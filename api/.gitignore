@@ -1,1 +1,3 @@
 node_modules
+files/kbis/*
+!files/kbis/.gitkeep
