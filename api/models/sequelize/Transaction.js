@@ -1,4 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
+const Product = require('./Product');
+const User = require('./User');
 const connection = require('../../lib/sequelize');
 
 class Transaction extends Model { };
@@ -10,14 +12,6 @@ Transaction.init(
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
-    },
-    client_id: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
-    products: {
-      type: DataTypes.JSON,
-      allowNull: false
     },
     transaction_date: {
       type: DataTypes.DATE,
@@ -33,4 +27,7 @@ Transaction.init(
     modelName: 'Transaction',
   }
 );
+
+Transaction.hasMany(Product);
+Transaction.hasOne(User);
 module.exports = Transaction;

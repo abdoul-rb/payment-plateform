@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
 const bcrypt = require("bcryptjs");
+const Transaction = require('./Transaction');
 
 class User extends Model {}
 
@@ -109,4 +110,5 @@ const encodePassword = async (user) => {
 User.addHook("beforeCreate", encodePassword);
 User.addHook("beforeUpdate", encodePassword);
 
+User.belongsTo(Transaction);
 module.exports = User;

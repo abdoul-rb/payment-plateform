@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
+const Transaction = require('./Transaction');
 
 class Product extends Model { };
 
@@ -26,4 +27,5 @@ Product.init(
     }
 );
 
+Product.belongsTo(Transaction);
 module.exports = Product;
