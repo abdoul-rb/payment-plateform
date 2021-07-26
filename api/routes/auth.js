@@ -7,19 +7,22 @@ const jwt = require("../lib/jwt");
 const app = Router();
 
 app.post("/register/supplier", (req, res) => {
-    const { name, company, phone_number, email, password, kbis, currency } = req.body;
+    const { name, company, phone_number, email, password, currency } = req.body;
 
     console.log('### ', req.files);
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).json({message: "Aucun fichier n'a été uploadé. Le KBIS est manquant"});
+    }
+    if (!req.files.hasOwnProperty("kbis")) {
+        return res.status(400).json({message: "Le fichier KBIS est manquant"});
+    }
+
     if(req.files) {
         var file = req.files.kbis;
-        var path = '../files/kbis/' + file.name;
+        var path = __dirname + '/../files/kbis/' + file.name;
 
         file.mv(path, (e) => {
-            if (e) {
-                return res.status(500).send(e);
-            } else {
-                res.send('Kbis ajouté');
-            }
+            console.log('error in mv', e);
         });
     }
 
@@ -36,27 +39,11 @@ app.post("/register/supplier", (req, res) => {
     .then((data) => res.status(201).json(data))
     .catch((e) => {
         const errors = {};
+        console.log('### E ', e)
         e.errors.map((err) => { errors[err.path] = err.message; })
         return res.status(400).json({ 'errors': errors })
     });
-
-        /* 
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).json({message: "Aucun fichier n'a été uploadé. Le KBIS est manquant"});
-        }
-        if (!req.files.hasOwnProperty("KBIS")) {
-            return res.status(400).json({message: "Le fichier KBIS est manquant"});
-        }
-
-        // La méthode mv permet de déplacer le fichier temporairement enregistré sur la machine
-        kbis.mv(uploadPath, function (err) {
-            if (err) {
-                return res.status(500).send(err);
-            }
-            // Fichier uploadé sur la machine !
-        });
-        */
-    });
+});
 
 app.post("/login",
     body('email')
