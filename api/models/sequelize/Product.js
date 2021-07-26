@@ -32,4 +32,9 @@ Product.init(
     }
 );
 
+Product.sync({
+    // alter: true
+    // force: true,
+  });
+
 module.exports = Product;

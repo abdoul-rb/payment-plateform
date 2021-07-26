@@ -34,4 +34,9 @@ Transaction.init(
   }
 );
 
+Transaction.sync({
+  // alter: true
+  // force: true,
+});
+
 module.exports = Transaction;
