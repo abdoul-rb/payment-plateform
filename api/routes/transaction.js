@@ -4,21 +4,21 @@ let app = express.Router();
 const { body, validationResult } = require('express-validator');
 
 
-app.get('/'), async (req, res) => {
+app.get('/', async (req, res) => {
     const transactions = await Transaction.findAll();
     // Return all transactions
     res.status(200).json({
         data: transactions
     });
-};
+});
 
-app.get('/:id'), async (req, res) => {
+app.get('/:id', async (req, res) => {
     const transaction = await Transaction.findById(req.params.id);
     // Return a transaction by id
     res.status(200).json({
         data: transaction
     });
-};
+});
 
 app.post("/", // Create a ressource
     body('client_id')
