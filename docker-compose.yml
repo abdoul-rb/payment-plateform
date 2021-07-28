@@ -8,6 +8,7 @@ services:
       environment:
          MONGO_INITDB_ROOT_USERNAME: root
          MONGO_INITDB_ROOT_PASSWORD: password
+
    api:
       image: node:alpine3.10
       ports:
@@ -20,6 +21,17 @@ services:
          - ./api:/home/node/api
       working_dir: /home/node/api
       command: sh -c "npm install --no-update-notifier; npm start api --no-update-notifier"
+
+   client:
+      image: node:alpine3.10
+      ports:
+         - ${CLIENT_PORT}:3000
+      environment: {}
+      volumes:
+         - ./client:/home/node/app
+      working_dir: /home/node/app
+      command: sh -c "yarn install; yarn start"
+
    db:
       image: postgres:alpine
       environment:
