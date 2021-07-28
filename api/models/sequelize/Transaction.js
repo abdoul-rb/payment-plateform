@@ -1,13 +1,13 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
-const Product = require('./Product');
+//const Product = require('./Product');
 const User = require('./User');
 
 class Transaction extends Model {
   static associate(models) {
     this.myAssociation = this
       .hasOne(models.User)
-      .hasMany(models.Product);
+      //.hasMany(models.Product);
   }
 };
 
@@ -25,6 +25,10 @@ Transaction.init(
     },
     status: {
       type: DataTypes.STRING,
+      allowNull: false
+    },
+    products: {
+      type: DataTypes.JSON,
       allowNull: false
     }
   },

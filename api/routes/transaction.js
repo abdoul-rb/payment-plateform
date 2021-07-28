@@ -23,8 +23,8 @@ app.get('/:id', async (req, res) => {
 app.post("/", // Create a ressource
     body('client_id')
         .isInt().withMessage('Need the client id who did the transaction'),
-    body('productId')
-        .isInt().withMessage('The product list must be a valid Int'),
+    body('products')
+        .isJSON().withMessage('The product list must be a valid Json file'),
     body('transaction_date')
         .isDate().withMessage('The transaction date need to be a valid date Y/M/D'),
     body('status')

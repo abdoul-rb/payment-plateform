@@ -7,7 +7,6 @@ var cors = require('cors');
 const RoutesMain = require("./routes/main");
 const AuthRoutes = require("./routes/auth");
 const TransactionRoutes = require("./routes/transaction");
-const ProductRoutes = require("./routes/product");
 
 // Parse body
 app.use(express.json());
@@ -19,8 +18,5 @@ app.use(fileUpload());
 app.use("/", RoutesMain);
 app.use("/auth", AuthRoutes);
 app.use("/transactions", TransactionRoutes);
-app.use("/products", ProductRoutes);
 
-
-const PORT = process.env['API_PORT'] || 3000;
 app.listen(process.env.PORT || 3000, () => console.log(`Server listening ...`));
