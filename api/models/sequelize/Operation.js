@@ -1,15 +1,14 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
-const Transaction = require('./Transaction');
 
-class Product extends Model {
+class Operation extends Model {
     static associate(models) {
         this.myAssociation = this
             .belongsTo(models.Transaction);
     }
 };
 
-Product.init(
+Operation.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -17,24 +16,28 @@ Product.init(
             autoIncrement: true,
             allowNull: false
         },
-        name: {
-            type: DataTypes.STRING,
+        type: {
+            type: DataTypes.ENUM('Capture', 'Remboursement'),
             allowNull: false
         },
         price: {
             type: DataTypes.FLOAT,
             allowNull: false
-        }
+        },
+        status: {
+            type: DataTypes.ENUM('En attente', 'Confirmee'),
+            allowNull: false
+        },
     },
     {
         sequelize: connection,
-        modelName: 'Product'
+        modelName: 'Operation'
     }
 );
 
 Product.sync({
-    // alter: true
+    alter: true
     // force: true,
-  });
+});
 
-module.exports = Product;
+module.exports = Operation;

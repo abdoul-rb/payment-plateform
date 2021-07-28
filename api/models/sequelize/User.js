@@ -6,8 +6,8 @@ const Transaction = require('./Transaction');
 class User extends Model {
    static associate(models) {
       this.myAssociation = this
-        .belongsTo(models.Transaction);
-    }
+         .belongsTo(models.Transaction);
+   }
 }
 
 User.init(

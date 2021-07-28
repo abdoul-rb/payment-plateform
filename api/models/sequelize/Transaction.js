@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const connection = require('../../lib/sequelize');
-const Product = require('./Product');
+const Product = require('./Operation');
 const User = require('./User');
 
 class Transaction extends Model {
