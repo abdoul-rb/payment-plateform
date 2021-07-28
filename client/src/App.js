@@ -7,14 +7,6 @@ import Login from './components/Auth/Login';
 
 class App extends React.Component {
 
-  state = {
-    suppliers: [
-      { id: 1, name: "Mark Zuk" },
-    ],
-    newSupplier: 'Rahim'
-  };
-
-
   render() {
 
     return (
