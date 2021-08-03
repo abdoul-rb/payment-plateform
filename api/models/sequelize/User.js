@@ -106,7 +106,7 @@ User.init(
 
 User.sync({
    // alter: true
-   force: true,
+   // force: true,
 });
 
 const encodePassword = async (user) => {

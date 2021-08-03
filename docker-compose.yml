@@ -30,7 +30,7 @@ services:
       volumes:
          - ./client:/home/node/app
       working_dir: /home/node/app
-      command: sh -c "yarn install; yarn start"
+      command: sh -c "npm ci; npm run start"
 
    db:
       image: postgres:alpine

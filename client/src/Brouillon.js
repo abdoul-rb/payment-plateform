@@ -43,18 +43,8 @@ class Brouillon extends React.Component {
             <h1>Plateforme de paiement en ligne</h1>
 
             <button class="block px-4 py-1 rounded bg-gray-200 focus:outline-none my-3" onClick={() => this.addRandomSupplier()}>
-               Ajouter un client
+               Ajouter
             </button>
-
-            <Router>
-               <Link to="/login">
-                  Login
-               </Link>
-
-               <Switch>
-                  <Route path="/login" component={Login} />
-               </Switch>
-            </Router>
 
             <ul class="my-6">
                {this.state.suppliers.map(supplier => (

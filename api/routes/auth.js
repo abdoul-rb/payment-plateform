@@ -17,6 +17,8 @@ app.post("/register/supplier", (req, res) => {
         return res.status(400).json({message: "Le fichier KBIS est manquant"});
     }
 
+    console.log('REQ', req);
+
     if(req.files) {
         var file = req.files.kbis;
         var path = __dirname + '/../files/kbis/' + file.name;
@@ -54,6 +56,7 @@ app.post("/login",
         .notEmpty().withMessage("Votre mot de passe ne peut pas être vide")
         .isString().withMessage(`Le mot de passe doit être du texte`),
     (req, res) => {
+        console.log(req)
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });

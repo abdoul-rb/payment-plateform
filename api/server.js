@@ -8,11 +8,10 @@ const RoutesMain = require("./routes/main");
 const AuthRoutes = require("./routes/auth");
 const TransactionRoutes = require("./routes/transaction");
 
-// Parse body
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(fileUpload());
-// app.use(cors());
+app.use(cors());
 
 // Include route files
 app.use("/", RoutesMain);

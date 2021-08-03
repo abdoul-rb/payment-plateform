@@ -1,66 +1,136 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from 'react-router-dom';
 
-const handleSubmit = async (event) => {
-   event.preventDefault();
+export default class Register extends React.Component {
 
-   const data = new FormData(event.target);
-   const response = await fetch('http://127.0.0.1/auth/register/supplier', {
-      method: 'POST',
-      body: data,
-      headers: {
-         Accept: 'application/json'
+   constructor(props) {
+      super(props);
+      this.state = { name: '', company: '', phone_number: '', email: '', password: '', currency: '', kbis: '' };
+
+      this.handleSubmit = this.handleSubmit.bind(this);
+   }
+
+   handleSubmit = async (event) => {
+      event.preventDefault();
+      const response = await fetch('http://localhost:3000/auth/register/supplier', {
+         method: 'POST',
+         body: JSON.stringify(this.state),
+         headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data'
+         }
+      });
+
+      const data = await response.json()
+      console.log(data)
+   }
+
+
+   handleChange = (event) => {
+      if (event.target.name !== 'kbis')
+         this.setState({ [event.target.name]: event.target.value })
+      else {
+         console.log(event.target.files[0]);
+         // this.setState({ kbis: event.target.files[0] })
+         const formData = new FormData();
+         formData.append('kbis', event.target.files[0], event.target.files[0].name)
+         console.log(formData);
+         this.setState({ kbis: formData })
       }
-   })
-}
+   }
 
-
-export default function Register() {
-
-   //const [user, setUser] = useState(null);
-
-   return (
-      <div>
+   render() {
+      return (
          <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="row">
-               <div className="col-md-7 mrgnbtm">
-                  <h2>Create User</h2>
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
+               <div className="bg-white pt-8 pb-20 px-4 shadow sm:rounded-lg sm:px-10">
+                  <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 mb-8">Créer votre compte</h2>
+                  <form className="" onSubmit={this.handleSubmit} encType='multipart/form-data'>
+                     <div className="grid grid-cols-6 gap-4">
+                        <div className="sm:col-span-4">
+                           <label htmlFor="name" className="block text-sm font-medium leading-5 text-gray-700">
+                              Prénom & Nom
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="text" value={this.state.name} onChange={this.handleChange} id="name" name="name" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                           </div>
+                        </div>
 
-               </div>
-            </div>
+                        <div className="sm:col-span-3">
+                           <label htmlFor="company" className="block text-sm font-medium leading-5 text-gray-700">
+                              Société
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="text" value={this.state.company} onChange={this.handleChange} id="company" name="company" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                           </div>
+                        </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-               <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                  <form className="" onSubmit={handleSubmit}>
-                     <div>
-                        <label htmlFor="email" class="block text-sm font-medium leading-5 text-gray-700">
-                           Adresse email
-                        </label>
-                        <div class="mt-1 rounded-md shadow-sm">
-                           <input type="email" id="email" name="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                        <div className="sm:col-span-3">
+                           <label htmlFor="phone_number" className="block text-sm font-medium leading-5 text-gray-700">
+                              Téléphone
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="text" value={this.state.phone_number} onChange={this.handleChange} id="phone_number" name="phone_number" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                           </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                           <label htmlFor="email" className="block text-sm font-medium leading-5 text-gray-700">
+                              Adresse email
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="email" value={this.state.email} onChange={this.handleChange} id="email" name="email" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" autoComplete="email" />
+                           </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                           <label htmlFor="password" className="block text-sm font-medium leading-5 text-gray-700">
+                              Mot de passe
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="password" value={this.state.password} onChange={this.handleChange} id="password" name="password" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" autoComplete="current-password" />
+                           </div>
+                        </div>
+
+
+
+                        <div className="sm:col-span-3">
+                           <label htmlFor="currency" className="block text-sm font-medium leading-5 text-gray-700">
+                              Devise
+                           </label>
+                           <div className="mt-1 rounded-md shadow-sm">
+                              <input type="text" value={this.state.currency} onChange={this.handleChange} id="currency" name="currency" className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
+                           </div>
+                        </div>
+
+                        <div className="sm:col-span-6">
+                           <div className="">
+                              <label className="flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-md tracking-wide uppercase border border-dashed border-gray-400 cursor-pointer">
+                                 <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                                 </svg>
+                                 <span className="mt-2 text-base leading-normal">Selectionner le kbis</span>
+                                 <input type='file' onChange={this.handleChange} name="kbis" id="kbis" className="hidden" />
+                              </label>
+                           </div>
                         </div>
                      </div>
 
-                     <div className="mt-6">
-                        <label htmlFor="password" class="block text-sm font-medium leading-5 text-gray-700">
-                           Adresse email
-                        </label>
-                        <div class="mt-1 rounded-md shadow-sm">
-                           <input type="password" id="password" name="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
-                        </div>
-                     </div>
-
-                     <div>
+                     <div className="mt-8 flex">
                         <button
                            type="submit"
-                           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                           className="flex justify-center py-2 px-10 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-900"
                         >
-                           Connexion
+                           S'inscrire
                         </button>
+                        <Link to="/login" className="inline-flex items-center justify-center px-8 py-2 text-base text-blue-600 font-medium space-x-1">
+                           <span className="text-black">Vous avez déjà un compte ? </span> <span>Connectez-vous.</span>
+                        </Link>
                      </div>
                   </form>
                </div>
             </div>
          </div>
-      </div>
-   );
+      );
+   }
 }
