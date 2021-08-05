@@ -23,7 +23,9 @@ services:
       command: sh -c "npm install --no-update-notifier; npm start api --no-update-notifier"
 
    client:
-      image: node:alpine3.10
+      build:
+         context: .
+         dockerfile: client.Dockerfile
       ports:
          - ${CLIENT_PORT}:3000
       environment: {}

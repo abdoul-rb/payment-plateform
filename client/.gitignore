@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# test files
+/src/tests/*
+!/src/tests/*.js
+!/src/tests/test_kbis_file.png
+
+.env
