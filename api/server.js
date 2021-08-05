@@ -1,5 +1,4 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 const app = express();
 var cors = require('cors');
 
@@ -10,7 +9,6 @@ const TransactionRoutes = require("./routes/transaction");
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(fileUpload());
 app.use(cors());
 
 // Include route files

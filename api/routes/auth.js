@@ -1,40 +1,46 @@
 const { body, validationResult } = require('express-validator');
 const User = require("../models/sequelize/User");
-const fileUpload = require('express-fileupload');
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("../lib/jwt");
 const app = Router();
+const path = require('path')
 
-app.post("/register/supplier", (req, res) => {
+
+// Permet de récupérer des données de formulaire transmis via l'entếte multipart/form-data
+
+const multer = require('multer');
+
+// Fonction permettant de parser correctement le nom des fichiers uplodés
+
+const filename_parser = (body,file) => (body.name+path.extname(file.originalname)).replace(/\s+/g,'_')
+
+/**
+ * Utilisation de multer en tant que middleware
+ * => avant d'invoquer la fonction de la route, les données de la requête sont d'abord récupérées
+ */  
+app.post("/register/supplier", multer({ 
+    storage: multer.diskStorage({
+        destination: (req,file,cb) => { cb(null,__dirname+'/../files/kbis/') }, // Les fichiers seront transportés dans le dossier ../files/kbis
+        filename: (req,file,cb) => { cb(null,filename_parser(req.body,file)) } // On transforme le nom du fichier en un autre nom (choix arbitraire)
+    })
+}).single('kbis') 
+/** On indique via ce middleware que cette route doit accepter qu'un seul fichier
+ *  Ce fichier doit être transporté via le paramètre "kbis" fourni dans la requête
+ */, (req, res) => {
+    console.log(filename_parser(req.body,req.file))
     const { name, company, phone_number, email, password, currency } = req.body;
 
-    console.log('### ', req.files);
-    if (!req.files || Object.keys(req.files).length === 0) {
+    if(!req.file) 
         return res.status(400).json({message: "Aucun fichier n'a été uploadé. Le KBIS est manquant"});
-    }
-    if (!req.files.hasOwnProperty("kbis")) {
-        return res.status(400).json({message: "Le fichier KBIS est manquant"});
-    }
-
-    console.log('REQ', req);
-
-    if(req.files) {
-        var file = req.files.kbis;
-        var path = __dirname + '/../files/kbis/' + file.name;
-
-        file.mv(path, (e) => {
-            console.log('error in mv', e);
-        });
-    }
-
+    
     User.create({ 
         name: name, 
         company: company,
         phone_number: phone_number,
         email: email,
         password: password,
-        kbis: path,
+        kbis: __dirname+'/../files/kbis/'+filename_parser(req.body,req.file),
         currency: currency,
         roles: 'SUPPLIER'
     })
@@ -45,6 +51,7 @@ app.post("/register/supplier", (req, res) => {
         e.errors.map((err) => { errors[err.path] = err.message; })
         return res.status(400).json({ 'errors': errors })
     });
+
 });
 
 app.post("/login",
