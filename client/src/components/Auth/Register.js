@@ -1,24 +1,27 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
+const { REACT_APP_API_URL } = process.env
+
 export default class Register extends React.Component {
 
    constructor(props) {
       super(props);
-      this.state = { name: '', company: '', phone_number: '', email: '', password: '', currency: '', kbis: '' };
+      this.state = { name: '', company: '', phone_number: '', email: '', password: '', currency: '', kbis: null };
 
       this.handleSubmit = this.handleSubmit.bind(this);
    }
 
    handleSubmit = async (event) => {
       event.preventDefault();
-      const response = await fetch('http://localhost:3000/auth/register/supplier', {
+      const formData = new FormData();
+      Object.keys(this.state).forEach((key) => {
+         formData.append(key,this.state[key])
+      })
+      console.log(REACT_APP_API_URL)
+      const response = await fetch(REACT_APP_API_URL+'/auth/register/supplier', {
          method: 'POST',
-         body: JSON.stringify(this.state),
-         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data'
-         }
+         body: formData
       });
 
       const data = await response.json()
@@ -30,22 +33,17 @@ export default class Register extends React.Component {
       if (event.target.name !== 'kbis')
          this.setState({ [event.target.name]: event.target.value })
       else {
-         console.log(event.target.files[0]);
          // this.setState({ kbis: event.target.files[0] })
-         const formData = new FormData();
-         formData.append('kbis', event.target.files[0], event.target.files[0].name)
-         console.log(formData);
-         this.setState({ kbis: formData })
+         this.setState({ kbis: event.target.files[0] })
       }
    }
-
    render() {
       return (
          <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
                <div className="bg-white pt-8 pb-20 px-4 shadow sm:rounded-lg sm:px-10">
                   <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 mb-8">Créer votre compte</h2>
-                  <form className="" onSubmit={this.handleSubmit} encType='multipart/form-data'>
+                  <form className="" onSubmit={this.handleSubmit}>
                      <div className="grid grid-cols-6 gap-4">
                         <div className="sm:col-span-4">
                            <label htmlFor="name" className="block text-sm font-medium leading-5 text-gray-700">
